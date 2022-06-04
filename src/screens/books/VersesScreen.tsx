@@ -15,7 +15,7 @@ const VersesScreen: React.FC<Props> = ({ route, navigation }) => {
   const { chapter, book } = route.params;
   const lighterBg = useColorModeValue('bg.lightSecondary', 'bg.darkSecondary');
   const bgColor = useColorModeValue('bg.dark', 'bg.light');
-  const [currentChapter, setCurrentChapter] = useState(parseInt(chapter, 2));
+  const [currentChapter, setCurrentChapter] = useState(parseInt(chapter, 10));
   const [currentBook] = useState(books[book.title as keyof typeof books]);
   const verses = currentBook.chapters[currentChapter] || [];
   const listRef = useRef<any>();
