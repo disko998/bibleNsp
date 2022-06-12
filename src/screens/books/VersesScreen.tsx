@@ -1,24 +1,28 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Center, Flex, Heading, Text, useColorModeValue } from 'native-base';
+import { Center, Heading } from 'native-base';
 import React, { useContext, useEffect, useLayoutEffect, useRef } from 'react';
-import { FlatList, TouchableOpacity } from 'react-native';
 
 import { BooksStackParamList } from '../../AppContainer';
 import DefaultLayout from '../../components/DefaultLayout';
 import ReaderNavigation from '../../components/ReaderNavigation';
+import VerseList from '../../components/VersesList';
 import { routes } from '../../const/routes';
+import { VerseItem } from '../../const/types';
 import { BooksContext } from '../../context/Books';
 
 type Props = NativeStackScreenProps<BooksStackParamList, routes.VERSES> & {};
 
 const VersesScreen: React.FC<Props> = ({ navigation }) => {
+  const listRef = useRef<any>();
   const { selectedChapter, onNext, onPrev, selectedBook } =
     useContext(BooksContext);
-  const verses = selectedBook.chapters[selectedChapter];
-
-  const lighterBg = useColorModeValue('bg.lightSecondary', 'bg.darkSecondary');
-  const bgColor = useColorModeValue('bg.dark', 'bg.light');
-  const listRef = useRef<any>();
+  const chapter = selectedBook.chapters[selectedChapter];
+  const verses: VerseItem[] = Object.keys(chapter).map(verse => ({
+    book: selectedBook,
+    chapter: selectedChapter,
+    text: chapter[verse],
+    verse,
+  }));
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -51,34 +55,7 @@ const VersesScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <DefaultLayout>
-      <FlatList
-        ref={listRef}
-        data={Object.keys(verses)}
-        keyExtractor={item => item}
-        renderItem={({ item, index }) => (
-          <TouchableOpacity>
-            <Flex
-              flexDirection="row"
-              bg={index % 2 === 0 ? lighterBg : 'transparent'}
-              padding="18px">
-              <Center
-                borderRadius="5px"
-                borderWidth="2px"
-                borderColor={bgColor}
-                h="23px"
-                w="23px"
-                mr="15px">
-                <Text fontWeight="bold" fontSize="10px">
-                  {item}
-                </Text>
-              </Center>
-              <Text textAlign="left" flex={1} fontSize="18px">
-                {`${verses[item]}`}
-              </Text>
-            </Flex>
-          </TouchableOpacity>
-        )}
-      />
+      <VerseList ref={listRef} verses={verses} hideChapter />
     </DefaultLayout>
   );
 };

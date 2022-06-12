@@ -1595,6 +1595,11 @@
   dependencies:
     merge-options "^3.0.4"
 
+"@react-native-clipboard/clipboard@^1.10.0":
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/@react-native-clipboard/clipboard/-/clipboard-1.10.0.tgz#605e784ed5435059c9b5db52b2d112f9fd09c409"
+  integrity sha512-1L+I0vmeUJgMi8MnNsqI00391/RFLkmmxj9qAuOS2madpvce/oNqJb8Pwk2Fc/uxIJSxOckTpq+dQwyPU6s+7w==
+
 "@react-native-community/cli-debugger-ui@^7.0.3":
   version "7.0.3"
   resolved "https://registry.yarnpkg.com/@react-native-community/cli-debugger-ui/-/cli-debugger-ui-7.0.3.tgz#3eeeacc5a43513cbcae56e5e965d77726361bcb4"
@@ -7085,6 +7090,11 @@ react-native-screens@^3.13.1:
   dependencies:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
+
+react-native-share@^7.6.2:
+  version "7.6.2"
+  resolved "https://registry.yarnpkg.com/react-native-share/-/react-native-share-7.6.2.tgz#7a1edf2226109b0a0aeaeefef3f8f7b119508a96"
+  integrity sha512-8Dv0ZqqW3rSzQxi9MoxXreRU65xizGVhrS2xoXfKJrgx9cI0jCAUao7B6CSZdB1exr6ZLFpi56pJ7t1Fp++d1A==
 
 react-native-status-bar-height@^2.6.0:
   version "2.6.0"

@@ -5,7 +5,7 @@ export type Book = {
   original_title: string;
   group: BookGroups;
   hebrew_title: string;
-  chapters: [Chapter];
+  chapters: Chapter;
   alias: BooksAlias;
   bookIndex: number;
 };
@@ -16,4 +16,11 @@ export type Chapter = {
 
 export type Verses = {
   [key: string]: string;
+};
+
+export type VerseItem = {
+  text: string;
+  book: Book;
+  chapter: number | string;
+  verse: number | string;
 };
