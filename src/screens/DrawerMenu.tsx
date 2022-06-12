@@ -97,7 +97,7 @@ export default function DrawerMenu(props: any) {
         labelStyle={{
           textTransform: 'capitalize',
         }}
-        label={`${colorMode} Theme`}
+        label={colorMode === 'dark' ? `Ноћна Tema` : `Светла Тема`}
         icon={() =>
           colorMode === 'light' ? (
             <SunIcon color="brand.primary" size="lg" />
