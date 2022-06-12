@@ -10,6 +10,7 @@ import {
 import Feather from 'react-native-vector-icons/Feather';
 import { TouchableOpacity } from 'react-native';
 import { getStatusBarHeight } from 'react-native-status-bar-height';
+
 type Props = {
   onPrev: () => void;
   onNext: () => void;

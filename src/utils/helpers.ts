@@ -1,14 +1,15 @@
-import { Book } from '../_data'
+import { Book } from '../const/types';
 
 export const groupBooks = (books: Book[]): { [key: string]: Book[] } => {
-    let groups: { [key: string]: Book[] } = {}
-    books.forEach(book => {
-        groups[book.group] = [...(groups[book.group] || []), book]
-    })
+  let groups: { [key: string]: Book[] } = {};
 
-    return groups
-}
+  books.forEach(book => {
+    groups[book.group] = [...(groups[book.group] || []), book];
+  });
+
+  return groups;
+};
 
 export const booksToArray = (books: { [key: string]: any }): Book[] => {
-    return Object.keys(books).map(key => ({ ...books[key], title: key }))
-}
+  return Object.keys(books).map(key => ({ ...books[key], title: key }));
+};

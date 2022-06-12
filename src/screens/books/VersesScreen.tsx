@@ -1,52 +1,24 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Center, Flex, Heading, Text, useColorModeValue } from 'native-base';
-import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import React, { useContext, useEffect, useLayoutEffect, useRef } from 'react';
 import { FlatList, TouchableOpacity } from 'react-native';
 
 import { BooksStackParamList } from '../../AppContainer';
 import DefaultLayout from '../../components/DefaultLayout';
 import ReaderNavigation from '../../components/ReaderNavigation';
-import { routes } from '../../utils/routes';
-import { books } from '../../_data';
+import { routes } from '../../const/routes';
+import { BooksContext } from '../../context/Books';
 
 type Props = NativeStackScreenProps<BooksStackParamList, routes.VERSES> & {};
 
-const VersesScreen: React.FC<Props> = ({ route, navigation }) => {
-  const { chapter, book } = route.params;
+const VersesScreen: React.FC<Props> = ({ navigation }) => {
+  const { selectedChapter, onNext, onPrev, selectedBook } =
+    useContext(BooksContext);
+  const verses = selectedBook.chapters[selectedChapter];
+
   const lighterBg = useColorModeValue('bg.lightSecondary', 'bg.darkSecondary');
   const bgColor = useColorModeValue('bg.dark', 'bg.light');
-  const [currentChapter, setCurrentChapter] = useState(parseInt(chapter, 10));
-  const [currentBook] = useState(books[book.title as keyof typeof books]);
-  const verses = currentBook.chapters[currentChapter] || [];
   const listRef = useRef<any>();
-
-  const onNext = useCallback(() => {
-    const nextChapter = currentChapter + 1;
-
-    if (nextChapter > Object.keys(currentBook.chapters).length + 1) {
-      // next book
-      // setCurrentBook()
-    } else {
-      // next chapter
-      setCurrentChapter(nextChapter);
-    }
-
-    listRef.current?.scrollToOffset({ offset: 0, animated: false });
-  }, [currentChapter, currentBook]);
-
-  const onPrev = useCallback(() => {
-    const prevChapter = currentChapter - 1;
-
-    if (prevChapter < 1) {
-      // prev book
-      // setCurrentBook()
-    } else {
-      // prev chapter
-      setCurrentChapter(prevChapter);
-    }
-
-    listRef.current?.scrollToOffset({ offset: 0, animated: false });
-  }, [currentChapter]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -54,14 +26,12 @@ const VersesScreen: React.FC<Props> = ({ route, navigation }) => {
       header: () => {
         return (
           <ReaderNavigation
-            onChapterPress={() =>
-              navigation.navigate(routes.CHAPTERS, { book })
-            }
+            onChapterPress={() => navigation.navigate(routes.CHAPTERS)}
             onBookPress={() => navigation.navigate(routes.BOOKS)}
-            chapter={currentChapter}
+            chapter={selectedChapter}
             onNext={onNext}
             onPrev={onPrev}
-            title={`${book.title}`}
+            title={`${selectedBook.title}`}
           />
         );
       },
@@ -73,7 +43,11 @@ const VersesScreen: React.FC<Props> = ({ route, navigation }) => {
         );
       },
     });
-  }, [onNext, onPrev, currentChapter, book, navigation]);
+  }, [onNext, onPrev, selectedChapter, selectedBook, navigation]);
+
+  useEffect(() => {
+    listRef.current?.scrollToOffset({ offset: 0, animated: false });
+  }, [selectedChapter, selectedBook]);
 
   return (
     <DefaultLayout>
@@ -98,7 +72,7 @@ const VersesScreen: React.FC<Props> = ({ route, navigation }) => {
                   {item}
                 </Text>
               </Center>
-              <Text textAlign="justify" flex={1} fontSize="18px">
+              <Text textAlign="left" flex={1} fontSize="18px">
                 {`${verses[item]}`}
               </Text>
             </Flex>

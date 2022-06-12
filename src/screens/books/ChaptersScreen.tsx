@@ -1,29 +1,29 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { Center, Text, useColorModeValue } from 'native-base';
-import React, { useLayoutEffect } from 'react';
+import { Center, Text, useColorMode, useColorModeValue } from 'native-base';
+import React, { useContext, useLayoutEffect } from 'react';
 import { FlatList, TouchableOpacity } from 'react-native';
 
 import { BooksStackParamList } from '../../AppContainer';
 import DefaultLayout from '../../components/DefaultLayout';
-import { routes } from '../../utils/routes';
+import { routes } from '../../const/routes';
+import { BooksContext } from '../../context/Books';
 
 type Props = NativeStackScreenProps<BooksStackParamList, routes.CHAPTERS> & {};
 
-const ChaptersScreen: React.FC<Props> = ({ route, navigation }) => {
+const ChaptersScreen: React.FC<Props> = ({ navigation }) => {
+  const { setSelectedChapter, selectedBook } = useContext(BooksContext);
   const bgColor = useColorModeValue('bg.dark', 'bg.light');
-  const book = route.params.book;
+  const { colorMode } = useColorMode();
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: book.title,
+      title: selectedBook.title,
     });
-  }, [navigation, book.title]);
+  }, [navigation, selectedBook.title]);
 
   const onChapterPress = (chapter: string) => {
-    navigation.navigate(routes.VERSES, {
-      chapter: chapter,
-      book: book,
-    });
+    setSelectedChapter(parseInt(chapter, 10));
+    navigation.navigate(routes.VERSES);
   };
 
   return (
@@ -31,7 +31,7 @@ const ChaptersScreen: React.FC<Props> = ({ route, navigation }) => {
       <FlatList
         contentContainerStyle={{ padding: 15 }}
         numColumns={4}
-        data={Object.keys(book.chapters)}
+        data={Object.keys(selectedBook.chapters)}
         keyExtractor={item => item}
         columnWrapperStyle={{
           margin: 5,
@@ -48,7 +48,9 @@ const ChaptersScreen: React.FC<Props> = ({ route, navigation }) => {
               <Text fontSize="xl" fontWeight="bold">
                 {item}
               </Text>
-              <Text color="gray.300">Глава</Text>
+              <Text color={colorMode === 'dark' ? 'gray.300' : 'gray.500'}>
+                Глава
+              </Text>
             </Center>
           </TouchableOpacity>
         )}

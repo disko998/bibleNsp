@@ -6,6 +6,8 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import { StatusBar } from 'expo-status-bar';
+import { createDrawerNavigator } from '@react-navigation/drawer';
 import {
   Heading,
   Text,
@@ -13,22 +15,19 @@ import {
   useColorModeValue,
   useTheme,
 } from 'native-base';
-import { StatusBar } from 'expo-status-bar';
-import { createDrawerNavigator } from '@react-navigation/drawer';
 
 import BooksScreen from './screens/books/BooksScreen';
 import ChaptersScreen from './screens/books/ChaptersScreen';
 import VersesScreen from './screens/books/VersesScreen';
-import { Book } from './_data';
 import Development from './screens/Development';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import DrawerMenu from './components/DrawerMenu';
-import { routes } from './utils/routes';
+import DrawerMenu from './screens/DrawerMenu';
+import { routes } from './const/routes';
 
 export type BooksStackParamList = {
   [routes.BOOKS]: undefined;
-  [routes.CHAPTERS]: { book: Book };
-  [routes.VERSES]: { book: Book; chapter: string };
+  [routes.CHAPTERS]: undefined;
+  [routes.VERSES]: undefined;
 };
 
 const Stack = createNativeStackNavigator<BooksStackParamList>();

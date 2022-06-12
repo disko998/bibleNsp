@@ -1,18 +1,17 @@
-import React, { useLayoutEffect } from 'react';
+import React, { useContext, useLayoutEffect } from 'react';
 import { ScrollView } from 'native-base';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { books } from '../../_data';
 import { BooksStackParamList } from '../../AppContainer';
 import DefaultLayout from '../../components/DefaultLayout';
 import BooksAccordion from '../../components/BooksAccordion';
-import { booksToArray, groupBooks } from '../../utils/helpers';
-import { routes } from '../../utils/routes';
+import { routes } from '../../const/routes';
+import { BooksContext } from '../../context/Books';
 
 type Props = NativeStackScreenProps<BooksStackParamList, routes.CHAPTERS> & {};
 
 const BooksScreen = ({ navigation }: Props) => {
-  const groupedBooks = groupBooks(booksToArray(books));
+  const { groupedBooks, setSelectedBook } = useContext(BooksContext);
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -28,11 +27,10 @@ const BooksScreen = ({ navigation }: Props) => {
             key={group}
             title={group}
             data={groupedBooks[group]}
-            onPress={item =>
-              navigation.navigate(routes.CHAPTERS, {
-                book: item,
-              })
-            }
+            onPress={item => {
+              setSelectedBook(item);
+              navigation.navigate(routes.CHAPTERS);
+            }}
           />
         ))}
       </ScrollView>

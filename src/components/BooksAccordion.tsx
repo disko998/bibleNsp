@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { Box, Flex, Heading, useColorModeValue } from 'native-base';
 import { TouchableOpacity } from 'react-native';
-import { Book } from '../_data';
+import { Book } from '../const/types';
 
 type Props = {
   title: string;
@@ -38,11 +38,11 @@ export default function BooksAccordion({ title, data, onPress }: Props) {
             <TouchableOpacity key={item.title} onPress={() => onPress(item)}>
               <Flex p="20px" flexDir={'row'} justify="space-between">
                 <Heading mr="10px" flex={1} fontSize="lg">
-                  {`${item.title}`}
+                  {`${item.title}\n(${item.original_title})`}
                 </Heading>
 
                 <Heading fontWeight="normal" color="gray.400" fontSize="xl">
-                  {item.hebrew}
+                  {item.hebrew_title}
                 </Heading>
               </Flex>
             </TouchableOpacity>

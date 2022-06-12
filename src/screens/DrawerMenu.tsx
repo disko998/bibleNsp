@@ -12,7 +12,7 @@ import {
   useTheme,
 } from 'native-base';
 
-import { routes } from '../utils/routes';
+import { routes } from '../const/routes';
 
 export default function DrawerMenu(props: any) {
   const { colors } = useTheme();
