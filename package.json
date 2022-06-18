@@ -32,7 +32,9 @@
     "react-native-share": "^7.6.2",
     "react-native-status-bar-height": "^2.6.0",
     "react-native-svg": "^12.3.0",
-    "react-native-vector-icons": "^9.1.0"
+    "react-native-vector-icons": "^9.1.0",
+    "zustand": "^4.0.0-rc.1",
+    "zustand-persist": "^0.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

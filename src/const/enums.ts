@@ -9,3 +9,7 @@ export enum BooksAlias {
   MOJ_4 = '4 moj.',
   MOJ_5 = '5 moj.',
 }
+
+export enum StorageKeys {
+  VERSES_STORE = '@verses_store',
+}

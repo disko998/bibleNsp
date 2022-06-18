@@ -15,10 +15,9 @@ const newColorTheme = {
 };
 
 const theme = extendTheme({
-  components: {},
   colors: newColorTheme,
   config: {
-    useSystemColorMode: true,
+    useSystemColorMode: false,
     initialColorMode: 'dark',
   },
 });

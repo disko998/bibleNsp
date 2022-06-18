@@ -14,38 +14,33 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Share from 'react-native-share';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-import { VerseItem } from '../const/types';
+import { Verse } from '../const/types';
+import { useVersesStore } from '../store/versesStore';
+import { stringifyVerse } from '../utils/helpers';
 
 type Props = {
-  verses: VerseItem[];
+  verses: Verse[];
   hideChapter?: boolean;
 };
 
 const VerseList = React.forwardRef(
   ({ verses, hideChapter }: Props, ref: any) => {
+    const favorites = useVersesStore(state => state.favorites);
+    const marked = useVersesStore(state => state.marked);
+    const markers = useVersesStore(state => state.markers);
+
     const bg = useColorModeValue('bg.lightSecondary', 'bg.darkSecondary');
     const borderColor = useColorModeValue('bg.dark', 'bg.light');
     const { isOpen, onOpen, onClose } = useDisclose();
-    const [selected, setSelected] = useState<VerseItem>();
-    const copyText = `${selected?.book.alias} ${selected?.chapter}:${selected?.verse}\n${selected?.text}`;
+    const [selected, setSelected] = useState<Verse>();
+    const verseString = stringifyVerse(selected);
+    const selectedVerseMarker = marked.find(m => m.verseKey === verseString);
 
-    const toggleFavorite = async () => {
-      // try {
-      //   await AsyncStorage.setItem('@favorites', JSON.stringify(selected));
-      // } catch (e) {
-      //   // saving error
-      // }
-    };
+    const toggleFavorite = useVersesStore(state => state.toggleFavorite);
+    const markVerse = useVersesStore(state => state.markVerse);
 
-    const toggleMarker = async () => {
-      // try {
-      //   await AsyncStorage.setItem('@favorites', JSON.stringify(selected));
-      // } catch (e) {
-      //   // saving error
-      // }
-    };
+    console.log(markers);
 
     return (
       <>
@@ -53,35 +48,59 @@ const VerseList = React.forwardRef(
           ref={ref}
           data={verses}
           keyExtractor={item => item.text}
-          renderItem={({ item, index }) => (
-            <TouchableOpacity
-              onLongPress={() => {
-                setSelected(item);
-                onOpen();
-              }}>
-              <Flex
-                flexDirection="row"
-                bg={index % 2 === 0 ? bg : 'transparent'}
-                padding="18px">
-                <Center
-                  borderRadius="5px"
-                  borderWidth="2px"
-                  borderColor={borderColor}
-                  h="23px"
-                  w="23px"
-                  mr="15px">
-                  <Text fontWeight="bold" fontSize="10px">
-                    {!hideChapter
-                      ? `${item.chapter}:${item.verse}`
-                      : item.verse}
+          renderItem={({ item, index }) => {
+            const itemKey = stringifyVerse(item);
+            const isFavorite = favorites.includes(itemKey);
+            const markerVerse = marked.find(m => m.verseKey === itemKey);
+
+            return (
+              <TouchableOpacity
+                onLongPress={() => {
+                  setSelected(item);
+                  onOpen();
+                }}>
+                <Flex
+                  flexDirection="row"
+                  bg={
+                    markerVerse
+                      ? markerVerse.marker.color
+                      : index % 2 === 0
+                      ? bg
+                      : 'transparent'
+                  }
+                  padding="18px">
+                  <Center
+                    borderRadius="5px"
+                    borderWidth="2px"
+                    borderColor={borderColor}
+                    h="23px"
+                    w="23px"
+                    mr="15px">
+                    <Text fontWeight="bold" fontSize="10px">
+                      {!hideChapter
+                        ? `${item.chapter}:${item.verse}`
+                        : item.verse}
+                    </Text>
+                  </Center>
+                  <Text textAlign="left" flex={1} fontSize="18px">
+                    {item.text}
                   </Text>
-                </Center>
-                <Text textAlign="left" flex={1} fontSize="18px">
-                  {item.text}
-                </Text>
-              </Flex>
-            </TouchableOpacity>
-          )}
+                </Flex>
+
+                {isFavorite && (
+                  <Icon
+                    position="absolute"
+                    right={2}
+                    top={-4}
+                    as={MaterialCommunityIcons}
+                    name="bookmark"
+                    color="brand.primary"
+                    size="7"
+                  />
+                )}
+              </TouchableOpacity>
+            );
+          }}
         />
 
         <Actionsheet
@@ -99,13 +118,13 @@ const VerseList = React.forwardRef(
                 _dark={{
                   color: 'gray.300',
                 }}>
-                {copyText}
+                {verseString}
               </Text>
             </Box>
 
             <Actionsheet.Item
               onPress={() => {
-                Clipboard.setString(copyText);
+                Clipboard.setString(verseString);
                 onClose();
               }}
               startIcon={
@@ -120,15 +139,16 @@ const VerseList = React.forwardRef(
               Копирај
             </Actionsheet.Item>
             <Actionsheet.Item
-              onPress={() => {
-                toggleMarker();
-                // onClose();
-              }}
+              onPress={() => markVerse(stringifyVerse(selected), markers[0])}
               startIcon={
                 <Icon
                   as={MaterialCommunityIcons}
                   name="marker"
-                  color="trueGray.400"
+                  color={
+                    selectedVerseMarker
+                      ? selectedVerseMarker.marker.color
+                      : 'trueGray.400'
+                  }
                   mr="1"
                   size="6"
                 />
@@ -137,14 +157,19 @@ const VerseList = React.forwardRef(
             </Actionsheet.Item>
             <Actionsheet.Item
               onPress={() => {
-                toggleFavorite();
-                // onClose();
+                if (selected) {
+                  toggleFavorite(selected);
+                }
               }}
               startIcon={
                 <Icon
                   as={MaterialCommunityIcons}
                   name="bookmark"
-                  color="trueGray.400"
+                  color={
+                    favorites.includes(stringifyVerse(selected))
+                      ? 'brand.primary'
+                      : 'trueGray.400'
+                  }
                   mr="1"
                   size="6"
                 />
@@ -154,9 +179,9 @@ const VerseList = React.forwardRef(
             <Actionsheet.Item
               onPress={() => {
                 Share.open({
-                  message: copyText,
+                  message: verseString,
                   title: 'Подели стих',
-                }).catch(err => {});
+                });
               }}
               startIcon={
                 <Icon

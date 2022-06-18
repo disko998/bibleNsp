@@ -1,17 +1,18 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Center, Text, useColorMode, useColorModeValue } from 'native-base';
-import React, { useContext, useLayoutEffect } from 'react';
+import React, { useLayoutEffect } from 'react';
 import { FlatList, TouchableOpacity } from 'react-native';
 
 import { BooksStackParamList } from '../../AppContainer';
 import DefaultLayout from '../../components/DefaultLayout';
 import { routes } from '../../const/routes';
-import { BooksContext } from '../../context/Books';
+import { useBooksStore } from '../../store/booksStore';
 
 type Props = NativeStackScreenProps<BooksStackParamList, routes.CHAPTERS> & {};
 
 const ChaptersScreen: React.FC<Props> = ({ navigation }) => {
-  const { setSelectedChapter, selectedBook } = useContext(BooksContext);
+  const selectedBook = useBooksStore(state => state.selectedBook);
+  const setSelectedChapter = useBooksStore(state => state.setSelectedChapter);
   const bgColor = useColorModeValue('bg.dark', 'bg.light');
   const { colorMode } = useColorMode();
 

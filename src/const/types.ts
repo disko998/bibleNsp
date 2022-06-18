@@ -5,22 +5,26 @@ export type Book = {
   original_title: string;
   group: BookGroups;
   hebrew_title: string;
-  chapters: Chapter;
+  chapters: {
+    [key: string]: { [key: string]: string };
+  };
   alias: BooksAlias;
   bookIndex: number;
 };
 
-export type Chapter = {
-  [key: string]: Verses;
-};
-
-export type Verses = {
-  [key: string]: string;
-};
-
-export type VerseItem = {
+export type Verse = {
   text: string;
-  book: Book;
-  chapter: number | string;
-  verse: number | string;
+  book_title: string;
+  chapter: string;
+  verse: string;
+};
+
+export type Marker = {
+  color: string;
+  label: string;
+};
+
+export type MarkedVerse = {
+  verseKey: string;
+  marker: Marker;
 };

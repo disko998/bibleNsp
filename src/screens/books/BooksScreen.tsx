@@ -1,4 +1,4 @@
-import React, { useContext, useLayoutEffect } from 'react';
+import React, { useLayoutEffect, useMemo } from 'react';
 import { ScrollView } from 'native-base';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
@@ -6,12 +6,15 @@ import { BooksStackParamList } from '../../AppContainer';
 import DefaultLayout from '../../components/DefaultLayout';
 import BooksAccordion from '../../components/BooksAccordion';
 import { routes } from '../../const/routes';
-import { BooksContext } from '../../context/Books';
+import { useBooksStore } from '../../store/booksStore';
+import { groupBooks } from '../../utils/helpers';
 
 type Props = NativeStackScreenProps<BooksStackParamList, routes.CHAPTERS> & {};
 
 const BooksScreen = ({ navigation }: Props) => {
-  const { groupedBooks, setSelectedBook } = useContext(BooksContext);
+  const books = useBooksStore(state => state.books);
+  const setSelectedBook = useBooksStore(state => state.setSelectedBook);
+  const groupedBooks = useMemo(() => groupBooks(books), [books]);
 
   useLayoutEffect(() => {
     navigation.setOptions({
