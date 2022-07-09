@@ -2,12 +2,12 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { Center, Heading } from 'native-base';
 import React, { useEffect, useLayoutEffect, useRef } from 'react';
 
-import { BooksStackParamList } from '../../AppContainer';
 import DefaultLayout from '../../components/DefaultLayout';
 import ReaderNavigation from '../../components/ReaderNavigation';
 import VerseList from '../../components/VersesList';
 import { routes } from '../../const/routes';
 import { Verse } from '../../const/types';
+import { BooksStackParamList } from '../../routes/BooksStack';
 import { useBooksStore } from '../../store/booksStore';
 
 type Props = NativeStackScreenProps<BooksStackParamList, routes.VERSES> & {};
@@ -59,7 +59,7 @@ const VersesScreen: React.FC<Props> = ({ navigation }) => {
 
   return (
     <DefaultLayout>
-      <VerseList ref={listRef} verses={verses} hideChapter />
+      <VerseList ref={listRef} verses={verses} verseIndicator />
     </DefaultLayout>
   );
 };

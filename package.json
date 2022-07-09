@@ -21,6 +21,7 @@
     "@react-navigation/drawer": "^6.4.1",
     "@react-navigation/native": "^6.0.10",
     "@react-navigation/native-stack": "^6.6.2",
+    "@sanar/react-native-highlight-text": "^1.0.2",
     "expo-status-bar": "^1.3.0",
     "native-base": "^3.4.6",
     "react": "17.0.2",

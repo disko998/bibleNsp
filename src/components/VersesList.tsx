@@ -7,13 +7,17 @@ import {
   Box,
   useDisclose,
   Icon,
+  Heading,
+  useTheme,
+  Factory,
 } from 'native-base';
 import React, { useState } from 'react';
-import { TouchableOpacity, FlatList } from 'react-native';
+import { FlatList, TouchableOpacity } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Clipboard from '@react-native-clipboard/clipboard';
 import Share from 'react-native-share';
+import HighlightText from '@sanar/react-native-highlight-text';
 
 import { Verse } from '../const/types';
 import { useVersesStore } from '../store/versesStore';
@@ -21,15 +25,19 @@ import { stringifyVerse } from '../utils/helpers';
 
 type Props = {
   verses: Verse[];
-  hideChapter?: boolean;
+  verseIndicator?: boolean;
+  searchWords?: string[];
 };
 
+const Touchable = Factory(TouchableOpacity);
+
 const VerseList = React.forwardRef(
-  ({ verses, hideChapter }: Props, ref: any) => {
+  ({ verses, verseIndicator, searchWords }: Props, ref: any) => {
     const favorites = useVersesStore(state => state.favorites);
     const marked = useVersesStore(state => state.marked);
     const markers = useVersesStore(state => state.markers);
 
+    const { colors } = useTheme();
     const bg = useColorModeValue('bg.lightSecondary', 'bg.darkSecondary');
     const borderColor = useColorModeValue('bg.dark', 'bg.light');
     const { isOpen, onOpen, onClose } = useDisclose();
@@ -39,8 +47,6 @@ const VerseList = React.forwardRef(
 
     const toggleFavorite = useVersesStore(state => state.toggleFavorite);
     const markVerse = useVersesStore(state => state.markVerse);
-
-    console.log(markers);
 
     return (
       <>
@@ -54,51 +60,64 @@ const VerseList = React.forwardRef(
             const markerVerse = marked.find(m => m.verseKey === itemKey);
 
             return (
-              <TouchableOpacity
+              <Touchable
+                padding="15px"
+                bg={
+                  markerVerse
+                    ? markerVerse.marker.color
+                    : index % 2 === 0
+                    ? bg
+                    : 'transparent'
+                }
                 onLongPress={() => {
                   setSelected(item);
                   onOpen();
                 }}>
-                <Flex
-                  flexDirection="row"
-                  bg={
-                    markerVerse
-                      ? markerVerse.marker.color
-                      : index % 2 === 0
-                      ? bg
-                      : 'transparent'
-                  }
-                  padding="18px">
-                  <Center
-                    borderRadius="5px"
-                    borderWidth="2px"
-                    borderColor={borderColor}
-                    h="23px"
-                    w="23px"
-                    mr="15px">
-                    <Text fontWeight="bold" fontSize="10px">
-                      {!hideChapter
-                        ? `${item.chapter}:${item.verse}`
-                        : item.verse}
-                    </Text>
-                  </Center>
-                  <Text textAlign="left" flex={1} fontSize="18px">
-                    {item.text}
-                  </Text>
-                </Flex>
+                <Flex flexDir={verseIndicator ? 'row' : 'column'}>
+                  {!verseIndicator ? (
+                    <Heading
+                      mb="5px"
+                      fontSize={
+                        '18px'
+                      }>{`${item.book_title} ${item.chapter}:${item.verse}`}</Heading>
+                  ) : (
+                    <Center
+                      borderRadius="5px"
+                      borderWidth="2px"
+                      borderColor={borderColor}
+                      h="23px"
+                      w="23px"
+                      mr="15px">
+                      <Text fontWeight="bold" fontSize="10px">
+                        {item.verse}
+                      </Text>
+                    </Center>
+                  )}
 
-                {isFavorite && (
-                  <Icon
-                    position="absolute"
-                    right={2}
-                    top={-4}
-                    as={MaterialCommunityIcons}
-                    name="bookmark"
-                    color="brand.primary"
-                    size="7"
+                  <HighlightText
+                    textComponent={({ children }) => (
+                      <Text textAlign="left" flex={1} fontSize="18px">
+                        {children}
+                      </Text>
+                    )}
+                    highlightStyle={{ color: colors.brand.primary }}
+                    searchWords={searchWords || []}
+                    textToHighlight={item.text}
                   />
-                )}
-              </TouchableOpacity>
+
+                  {isFavorite && (
+                    <Icon
+                      position="absolute"
+                      right={0}
+                      top={-18}
+                      as={MaterialCommunityIcons}
+                      name="bookmark"
+                      color="brand.primary"
+                      size="7"
+                    />
+                  )}
+                </Flex>
+              </Touchable>
             );
           }}
         />

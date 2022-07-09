@@ -3,9 +3,9 @@ import { Center, Text, useColorMode, useColorModeValue } from 'native-base';
 import React, { useLayoutEffect } from 'react';
 import { FlatList, TouchableOpacity } from 'react-native';
 
-import { BooksStackParamList } from '../../AppContainer';
 import DefaultLayout from '../../components/DefaultLayout';
 import { routes } from '../../const/routes';
+import { BooksStackParamList } from '../../routes/BooksStack';
 import { useBooksStore } from '../../store/booksStore';
 
 type Props = NativeStackScreenProps<BooksStackParamList, routes.CHAPTERS> & {};

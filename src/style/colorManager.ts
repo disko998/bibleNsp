@@ -8,7 +8,6 @@ const colorModeManager: StorageManager = {
       let val = await AsyncStorage.getItem('@my-app-color-mode');
       return val === 'dark' ? 'dark' : 'light';
     } catch (e) {
-      console.log(e);
       return 'light';
     }
   },

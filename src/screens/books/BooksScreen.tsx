@@ -2,12 +2,12 @@ import React, { useLayoutEffect, useMemo } from 'react';
 import { ScrollView } from 'native-base';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-import { BooksStackParamList } from '../../AppContainer';
 import DefaultLayout from '../../components/DefaultLayout';
 import BooksAccordion from '../../components/BooksAccordion';
 import { routes } from '../../const/routes';
 import { useBooksStore } from '../../store/booksStore';
 import { groupBooks } from '../../utils/helpers';
+import { BooksStackParamList } from '../../routes/BooksStack';
 
 type Props = NativeStackScreenProps<BooksStackParamList, routes.CHAPTERS> & {};
 

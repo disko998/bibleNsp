@@ -29,7 +29,6 @@ const books = [
 ];
 
 export default () => {
-  console.log(chaptersToArray(mojsije1));
   books.map(async book => {
     try {
       const bookRef = firestore().collection('books').doc(book.alias);

@@ -1,5 +1,17 @@
 export enum BookGroups {
   TORA = 'Тора',
+  PROPHETS = 'Пророци',
+  WRITINGS = 'Списи',
+  NEW_TESTAMENT = 'Нови Завет',
+}
+
+export enum FilterBooks {
+  ALL = 'all',
+  OLD_TESTAMENT = 'old_testament',
+  TORA = 'tora',
+  PROPHETS = 'prophets',
+  WRITINGS = 'writings',
+  NEW_TESTAMENT = 'new_testament',
 }
 
 export enum BooksAlias {
